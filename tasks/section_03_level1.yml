@@ -70,16 +70,6 @@
     - section3.6
 
 - name: 3.6 Configure Network Time Protocol (ipv4) (Scored)
-  yum: >
-    pkg=chrony
-    state=installed
-  always_run: yes
-  when: ansible_distribution_major_version == '7'
-  tags:
-    - scored
-    - section3.6
-
-- name: 3.6 Configure Network Time Protocol (ipv4) (Scored)
   service: >
     name=ntpd
     state=started
@@ -113,6 +103,38 @@
     - scored
     - section3.6
 
+- name: 3.6 Configure Network Time Protocol (ipv4) (Scored)
+  yum: >
+    pkg=chrony
+    state=installed
+  always_run: yes
+  when: ansible_distribution_major_version == '7'
+  tags:
+    - scored
+    - section3.6
+
+- name: 3.6 Configure Network Time Protocol (ipv4) (Scored)
+  service: >
+    name=chronyd
+    state=started
+    enabled=yes
+  when: ansible_distribution_major_version == '7'
+  tags:
+    - scored
+    - section3.6
+
+- name: 3.6 Configure Network Time Protocol (ipv4) (Scored)
+  # from http://chrony.tuxfamily.org/faq.html#_how_can_i_make_code_chronyd_code_more_secure
+  lineinfile: >
+    dest=/etc/chrony.conf
+    state=present
+    line="{{item}}"
+    insertafter=EOF
+  with_items:
+    - "port 0"
+    - "cmdport 0"
+  when: ansible_distribution_major_version == '7'
+
 - name: 3.7 Remove LDAP (Not Scored)
   yum: >
     name=openldap-clients
@@ -136,6 +158,7 @@
     name={{ item }}
     state=stopped
     enabled=no
+  when: nfs
   with_items:
     - rpcbind
     - nfslock
