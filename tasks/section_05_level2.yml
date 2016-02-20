@@ -103,7 +103,7 @@
       - section5.2.3
     when: ansible_distribution_major_version == '6'
 
-  - name: Make sure grub2 tools are installed
+  - name: 5.2.3 Enable Auditing for Processes That Start Prior to auditd (Scored) -- Make sure grub2 tools are installed
     yum: name=grub2-tools state=present
     tags:
       - scored
@@ -111,21 +111,19 @@
       - section5.2.3
     when: ansible_distribution_major_version == '7'
 
-        # To fix for rhel 7
-#  - name: 5.2.3 Enable Auditing for Processes That Start Prior to auditd (Scored)
-#    lineinfile:
-#      state=present
-#      dest=/etc/default/grub
-#      backrefs=yes
-#      regexp="(net.ifnames=0)"
-#      line="\1 audit=1"
-#   tags:
-#      - scored
-#      - section5.2
-#      - section5.2.3
-#    when: ansible_distribution_major_version == '7'
+  - name: 5.2.3 Enable Auditing for Processes That Start Prior to auditd (Scored)
+    lineinfile:
+      state=present
+      dest=/etc/default/grub
+      line='GRUB_CMDLINE_LINUX="audit=1 ${GRUB_CMDLINE_LINUX}"'
+      insertafter=EOF
+   tags:
+      - scored
+      - section5.2
+      - section5.2.3
+    when: ansible_distribution_major_version == '7'
 
-  - name: Run grub2 config after mods in
+  - name: 5.2.3 Enable Auditing for Processes That Start Prior to auditd (Scored) -- Run grub2-mkconfig after changes
     command: grub2-mkconfig -o /boot/grub2/grub.cfg
     tags:
       - scored

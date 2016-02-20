@@ -94,6 +94,10 @@ disable_ipv6: no
 #ssh_deny_groups:
 #ssh_deny_users:
 
+# Enable rsyslog (CIS Section 5.1)
+# On CentOS 7, depending on systemd's journal may be better
+enable_rsyslog: yes
+
 # 9.1.10 - 9.1.12 to verify & find
 verify_find: no
 
