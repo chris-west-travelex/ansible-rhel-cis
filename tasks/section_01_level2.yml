@@ -91,7 +91,7 @@
     - section1.2.3
 
 - name: 1.2.4 Verify package integrity using RPM (Not Scored)
-  shell: "rpm -qVa | awk '$2 != \"c\" { print $0}' | wc -l | grep -v {{rpm_audit_tolerance}} && touch /tmp/.cis-1.2.4"
+  shell: "rpm -qVa | awk '$2 != \"c\" { print $0}' | wc -l | grep {{rpm_audit_tolerance}} && touch /tmp/.cis-1.2.4"
   args:
     creates: "/tmp/.cis-1.2.4"
   when: ansible_distribution == "CentOS"

@@ -124,7 +124,7 @@
     - scored
 
 - name: 1.1.17 Set sticky bit on all world-writeable directories (Scored)
-  shell: "df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d \\( -perm -0002 -a ! -perm -1000 \\) 2>/dev/null | wc -l | grep -v 0 && touch /tmp/.cis-1.1.17"
+  shell: "df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d \\( -perm -0002 -a ! -perm -1000 \\) 2>/dev/null | wc -l | grep 0 && touch /tmp/.cis-1.1.17"
   args:
     creates: "/tmp/.cis-1.1.17"
   tags:
