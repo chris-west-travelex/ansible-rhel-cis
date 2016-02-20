@@ -47,10 +47,15 @@ squid: no
 #   no: don't adjust inactive account settings
 lock_inactive: no
 
-# Specifie which IP Addresses are permitted to connect to the host.
+# Specify which IP Addresses are permitted to connect to the host.
 # If nothing is specified All:All will be used
 # Ex: 192.168.1.0/255.255.255.0"
 tcp_allow: []
+
+# Switch off wireless networking
+#   yes: switch it off
+#   no: leave it as default
+disable_wifi: yes
 
 # Enable iptables (CIS 4.7)
 # You should check to see that your current iptables configuration in
