@@ -17,20 +17,13 @@
     - section1.2
     - section1.2.2
 
-- name: 1.2.2 Verify CentOS GPG key is installed (Scored)
-  command: gpg --quiet --with-fingerprint /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-{{ ansible_distribution_major_version }}
-  when: ansible_distribution == "CentOS"
-  tags:
-      - scored
-      - section1.2
-      - section1.2.2
-
 - name: 1.2.3 Verify that gpgcheck is Globally Activated (Scored)
   lineinfile: >
     state=present
     dest=/etc/yum.conf
     regexp=^gpgcheck=
     line=gpgcheck=1
+  when: ansible_distribution == "RedHat"
   tags:
     - scored
     - section1.2
@@ -38,6 +31,7 @@
 
 - name: 1.2.4 Disable the rhnsd Daemon (Not Scored)
   debug: msg='*** Check if you want to disable rhnsd or not with => systemctl is-enabled rhnsd'
+  when: ansible_distribution == "RedHat" and ansible_distribution_major_version == '6'
   tags:
     - notscored
     - section1.2
@@ -54,6 +48,7 @@
 
 - name: 1.2.5 Obtain software package updates with yum (Not Scored)
   debug: msg="*** Check manually with => yum check-update"
+  when: ansible_distribution == "RedHat"
   tags:
     - notscored
     - section1.2
@@ -61,7 +56,47 @@
 
 - name: 1.2.6 Verify package integrity using RPM (Not Scored)
   debug: msg="*** Check via cron/AIDE/manually"
+  when: ansible_distribution == "RedHat"
   tags:
     - notscored
     - section1.2
     - section1.2.6
+
+- name: 1.2.1 Verify CentOS GPG key is installed (Scored)
+  command: gpg --quiet --with-fingerprint /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-{{ ansible_distribution_major_version }}
+  when: ansible_distribution == "CentOS"
+  tags:
+      - scored
+      - section1.2
+      - section1.2.1
+
+- name: 1.2.2 Verify that gpgcheck is Globally Activated (Scored)
+  lineinfile: >
+    state=present
+    dest=/etc/yum.conf
+    regexp=^gpgcheck=
+    line=gpgcheck=1
+  when: ansible_distribution == "CentOS"
+  tags:
+    - scored
+    - section1.2
+    - section1.2.2
+
+- name: 1.2.3 Obtain software package updates with yum (Not Scored)
+  yum: name=* state=latest
+  when: ansible_distribution == "CentOS"
+  tags:
+    - notscored
+    - section1.2
+    - section1.2.3
+
+- name: 1.2.4 Verify package integrity using RPM (Not Scored)
+  shell: "rpm -qVa | awk '$2 != \"c\" { print $0}' | wc -l | grep -v {{rpm_audit_tolerance}} && touch /tmp/.cis-1.2.4"
+  args:
+    creates: "/tmp/.cis-1.2.4"
+  when: ansible_distribution == "CentOS"
+  tags:
+    - notscored
+    - section1.2
+    - section1.2.4
+
