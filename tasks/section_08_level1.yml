@@ -102,7 +102,7 @@
       - section8.2
 
   - name: 8.3 Set GNOME Warning Banner (Not Scored)
-    debug: msg="*** Will do later"
+    debug: msg="*** Not relevant on a non-X11 system"
     tags:
       - scored
       - section8.3
