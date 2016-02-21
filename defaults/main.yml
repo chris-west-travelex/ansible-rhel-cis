@@ -98,6 +98,9 @@ disable_ipv6: no
 # On CentOS 7, depending on systemd's journal may be better
 enable_rsyslog: yes
 
+# 9.1.1 to verify file permissions
+verify_permissions: no
+
 # 9.1.10 - 9.1.12 to verify & find
 verify_find: no
 

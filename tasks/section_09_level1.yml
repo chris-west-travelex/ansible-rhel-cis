@@ -14,6 +14,13 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 #
+  - name: 9.1.1 Verify System File Permissions (Not Scored)
+    command: rpm -Va --nomtime --nosize --nomd5 --nolinkto
+    when: verify_permissions
+    tags:
+      - notscored
+      - section9.1
+      - section9.1.1
 
   - name: 9.1.2 Verify Permissions on /etc/passwd (Scored)
     file: >
@@ -116,7 +123,7 @@
       - section9.1.12
 
   - name: 9.1.13 Find SUID System Executables (Not Scored)
-    shell: '/bin/rpm -V `/bin/rpm -qf /usr/bin/sudo`'
+    shell: "for SUID in $(df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}'  sudo find '{}' -xdev -type f -perm -4000 -print); do rpm -V $(rpm -qf ${SUID}); done"
     register: suid
     when: verify_rpm
     tags:
@@ -125,7 +132,7 @@
       - section9.1.13
 
   - name: 9.1.14 Find SGID System Executables (Not Scored)
-    shell: '/bin/rpm -V `/bin/rpm -qf /usr/bin/sudo`'
+    shell: "for SGID in $(df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type f -perm -2000 -print); do rpm -V $(rpm -qf ${SGID}); done"
     register: sgid
     when: verify_rpm
     tags:
@@ -192,19 +199,44 @@
       - section9.2.5
 
   - name: 9.2.6 Ensure root PATH Integrity (Scored)
-    debug: msg="*** To do later"
+    copy: >
+      src=cis-9.2.6.sh
+      dest=/root/cis-9.2.6.sh
+      mode=0700
+      owner=root
+      group=root
     tags:
       - scored
       - section9.2
       - section9.2.6
 
+  - name: 9.2.6 Ensure root PATH Integrity (Scored)
+    command: /root/cis-9.2.6.sh
+    tags:
+      - scored
+      - section9.2
+      - section9.2.6
+
+
   - name: 9.2.7 Check Permissions on User Home Directories (Scored)
-    debug: msg="*** To do later"
+    copy: >
+      src=cis-9.2.7.sh
+      dest=/root/cis-9.2.7.sh
+      mode=0700
+      owner=root
+      group=root
     tags:
       - scored
       - section9.2
       - section9.2.7
 
+  - name: 9.2.7 Check Permissions on User Home Directories (Scored)
+    command: /root/cis-9.2.7.sh
+    tags:
+      - scored
+      - section9.2
+      - section9.2.7
+ 
   - name: 9.2.8 Check User Dot File Permissions (Scored)
     debug: msg="*** To do later"
     tags:
