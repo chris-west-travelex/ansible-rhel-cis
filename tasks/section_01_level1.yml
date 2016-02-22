@@ -27,7 +27,7 @@
 - name: 1.1.5 Create Separate Partition for /var (Scored)
   shell: 'grep "[[:space:]]/var[[:space:]]" /etc/fstab && touch /tmp/.cis-1.1.5'
   args:
-    creates "/tmp/.cis-1.1.5"
+    creates: "/tmp/.cis-1.1.5"
   tags:
     - scored
     - section1.1
@@ -50,7 +50,7 @@
 - name: 1.1.7 Create Separate Partition for /var/log (Scored)
   shell: 'grep "[[:space:]]/var/log[[:space:]]" /etc/fstab && touch /tmp/.cis-1.1.7'
   args:
-    creates "/tmp/.cis-1.1.7"
+    creates: "/tmp/.cis-1.1.7"
   tags:
     - scored
     - section1.1
@@ -59,7 +59,7 @@
 - name: 1.1.8 Create Separate Partition for /var/log/audit (Scored)
   shell: 'grep "[[:space:]]/var/log/audit[[:space:]]" /etc/fstab && touch /tmp/.cis-1.1.8'
   args:
-    creates "/tmp/.cis-1.1.8"
+    creates: "/tmp/.cis-1.1.8"
   tags:
     - scored
     - section1.1
@@ -68,7 +68,7 @@
 - name: 1.1.9 Create Separate Partition for /home (Scored)
   shell: 'grep "[[:space:]]/home[[:space:]]" /etc/fstab && touch /tmp/.cis-1.1.9'
   args:
-    creates "/tmp/.cis-1.1.9"
+    creates: "/tmp/.cis-1.1.9"
   tags:
     - scored
     - section1.1
