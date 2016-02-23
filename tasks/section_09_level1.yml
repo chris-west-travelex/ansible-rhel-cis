@@ -222,8 +222,8 @@
 
   - name: 9.2.6-9.2.20 Prep
     copy: >
-      src=cis-9.2.6.sh
-      dest=/root/.ansible/9.2/cis-{{item}}.sh
+      src="9.2/cis-{{item}}.sh"
+      dest="/root/.ansible/9.2/cis-{{item}}.sh"
       mode=0700
       owner=root
       group=root
