@@ -7,7 +7,7 @@ if [ "`echo $PATH | /bin/grep :: `" != "" ]; then
   RET=1
 fi
 
-if [ "`echo $PATH | bin/grep :$`" != "" ]; then
+if [ "`echo $PATH | /bin/grep :$`" != "" ]; then
   echo "Trailing : in PATH"
   RET=1
 fi
