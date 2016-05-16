@@ -91,7 +91,7 @@
   - name: 8.2 Remove OS Information from Login Warning Banners (Scored)
     replace: >
       dest=/etc/{{ item }}
-      regexp='\\r|\\v|\\s' 
+      regexp='\\\\r|\\\\v|\\\\s' 
       replace='[CIS replaced]'
     with_items:
       - motd
