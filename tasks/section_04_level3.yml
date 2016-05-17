@@ -1,0 +1,13 @@
+---
+  - name: 4.3 Configure logrotate (Not Scored)
+    copy: >
+      src=etc/logrotate.d/syslog
+      dest=/etc/logrotate.d/syslog
+    when: enable_rsyslog
+    tags:
+      - notscored
+      - section4.3
+
+
+
+
