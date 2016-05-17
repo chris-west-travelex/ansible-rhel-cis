@@ -49,3 +49,8 @@
     tags:
       - section1
       - level7
+
+  - include: section_01_level8.yml
+    tags:
+      - section1
+      - level8
