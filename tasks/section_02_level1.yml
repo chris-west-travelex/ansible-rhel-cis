@@ -191,11 +191,8 @@
 
 - name: 2.1.6 Remove rsh-server (Scored)
   yum: >
-    name="{{item}}"
+    name=rsh-server
     state=absent
-  with_items:
-    - rsh-server
-    - rsh
   tags:
     - scored
     - section2.1
@@ -203,11 +200,8 @@
 
 - name: 2.1.7 Remove talk-server (Scored)
   yum: >
-    name="{{item}}"
+    name=talk-server
     state=absent
-  with_items:
-    - talk-server
-    - talk
   tags:
     - scored
     - section2.1
@@ -215,11 +209,8 @@
 
 - name: 2.1.8 Remove telnet-server (Scored)
   yum: >
-    name="{{item}}"
+    name=telnet-server
     state=absent
-  with_items:
-    - telnet-server
-    - telnet
   tags:
     - scored
     - section2.1
@@ -227,11 +218,8 @@
 
 - name: 2.1.9 Remove tftp-server (Scored)
   yum: >
-    name="{{item}}"
+    name=tftp-server
     state=absent
-  with_items:
-    - tftp-server
-    - tftp
   tags:
     - scored
     - section2.1
