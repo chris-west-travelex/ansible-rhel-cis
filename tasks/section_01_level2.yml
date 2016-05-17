@@ -62,15 +62,23 @@
     - section1.2
     - section1.2.6
 
-- name: 1.2.1 Verify CentOS GPG key is installed (Scored)
+- name: 1.2.1 Ensure package manager repositories are configured (Not Scored)
+  debug: msg="*** Check manually with => yum repolist"
+  when: ansible_distribution == "CentOS"
+  tags:
+    - notscored
+    - section1.2
+    - section1.2.1
+
+- name: 1.2.2 Verify CentOS GPG key is installed (Scored)
   command: gpg --quiet --with-fingerprint /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-{{ ansible_distribution_major_version }}
   when: ansible_distribution == "CentOS"
   tags:
       - scored
       - section1.2
-      - section1.2.1
+      - section1.2.2
 
-- name: 1.2.2 Verify that gpgcheck is Globally Activated (Scored)
+- name: 1.2.3 Verify that gpgcheck is Globally Activated (Scored)
   lineinfile: >
     state=present
     dest=/etc/yum.conf
@@ -80,23 +88,4 @@
   tags:
     - scored
     - section1.2
-    - section1.2.2
-
-- name: 1.2.3 Obtain software package updates with yum (Not Scored)
-  yum: name=* state=latest
-  when: ansible_distribution == "CentOS"
-  tags:
-    - notscored
-    - section1.2
     - section1.2.3
-
-- name: 1.2.4 Verify package integrity using RPM (Not Scored)
-  shell: "rpm -qVa | awk '$2 != \"c\" { print $0}' | wc -l | grep {{rpm_audit_tolerance}} && touch /tmp/.cis-1.2.4"
-  args:
-    creates: "/tmp/.cis-1.2.4"
-  when: ansible_distribution == "CentOS"
-  tags:
-    - notscored
-    - section1.2
-    - section1.2.4
-
