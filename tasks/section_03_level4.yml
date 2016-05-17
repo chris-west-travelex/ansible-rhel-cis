@@ -1,0 +1,50 @@
+---
+  - name: 3.4.1 Install TCP Wrappers (Scored)
+    yum: >
+      name=tcp_wrappers
+      state=present
+    tags:
+      - scored
+      - section3.4
+      - section3.4.1
+
+  - name: 3.4.2 Create /etc/hosts.allow (Scored)
+    lineinfile: >
+      state=present
+      create=yes
+      dest=/etc/hosts.allow
+      regexp=^ALL
+      line=ALL:{{ tcp_allow | default("ALL") }}
+    tags:
+      - scored
+      - section3.4
+      - section3.4.2
+
+  - name: 3.4.3 Create /etc/hosts.deny (Scored)
+    lineinfile: >
+      state=present
+      create=yes
+      dest=/etc/hosts.deny
+      line=ALL:ALL
+    tags:
+      - scored
+      - section3.4
+      - section3.4.3
+ 
+  - name: 3.4.4 Verify Permissions on /etc/hosts.allow (Scored)
+    file: >
+      path=/etc/hosts.allow
+      mode=0644
+    tags:
+      - scored
+      - section3.4
+      - section3.4.4
+
+  - name: 3.4.5 Verify Permissions on /etc/hosts.deny (Scored)
+    file: >
+      path=/etc/hosts.deny
+      mode=0644
+    tags:
+      - scored
+      - section3.4
+      - section3.4.5

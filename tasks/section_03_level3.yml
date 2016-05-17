@@ -1,0 +1,169 @@
+---
+  - name: 3.3.1 Disable IPv6 Router Advertisements (Scored)
+    sysctl:
+      name=net.ipv6.conf.all.accept_ra
+      value=0
+      state=present
+      ignoreerrors=true
+    when: ansible_distribution_major_version == '6'
+    tags:
+      - scored
+      - section3.3
+      - section3.3.1
+
+  - name: 3.3.1 Disable IPv6 Router Advertisements (Scored)
+    sysctl:
+      sysctl_file=/etc/sysctl.d/10-cis.conf
+      name=net.ipv6.conf.all.accept_ra
+      value=0
+      state=present
+      ignoreerrors=true
+    when: ansible_distribution_major_version == '7'
+    tags:
+      - scored
+      - section3.3
+      - section3.3.1
+
+  - name: 3.3.1 Disable IPv6 Router Advertisements (Scored)
+    sysctl:
+      name=net.ipv6.conf.default.accept_ra
+      value=0
+      state=present
+      ignoreerrors=true
+    when: ansible_distribution_major_version == '6'
+    tags:
+      - scored
+      - section3.3
+      - section3.3.1
+
+  - name: 3.3.1 Disable IPv6 Router Advertisements (Scored)
+    sysctl:
+      sysctl_file=/etc/sysctl.d/10-cis.conf
+      name=net.ipv6.conf.default.accept_ra
+      value=0
+      state=present
+      ignoreerrors=true
+    when: ansible_distribution_major_version == '7'
+    tags:
+      - scored
+      - section3.3
+      - section3.3.1
+
+  - name: 3.3.2 Disable IPv6 Redirect Acceptance (Scored)
+    sysctl:
+      name=net.ipv6.conf.all.accept_redirects
+      value=0
+      state=present
+      ignoreerrors=true
+    when: ansible_distribution_major_version == '6'
+    tags:
+      - scored
+      - section3.3
+      - section3.3.2
+
+  - name: 3.3.2 Disable IPv6 Redirect Acceptance (Scored)
+    sysctl:
+      sysctl_file=/etc/sysctl.d/10-cis.conf
+      name=net.ipv6.conf.all.accept_redirects
+      value=0
+      state=present
+      ignoreerrors=true
+    when: ansible_distribution_major_version == '7'
+    tags:
+      - scored
+      - section3.3
+      - section3.3.2
+
+  - name: 3.3.2 Disable IPv6 Redirect Acceptance (Scored)
+    sysctl:
+      name=net.ipv6.conf.default.accept_redirects
+      value=0
+      state=present
+      ignoreerrors=true
+    when: ansible_distribution_major_version == '6'
+    tags:
+      - notscored
+      - section3.3
+      - section3.3.2
+
+  - name: 3.3.2 Disable IPv6 Redirect Acceptance (Scored)
+    sysctl:
+      sysctl_file=/etc/sysctl.d/10-cis.conf
+      name=net.ipv6.conf.default.accept_redirects
+      value=0
+      state=present
+      ignoreerrors=true
+    when: ansible_distribution_major_version == '7'
+    tags:
+      - scored
+      - section3.3
+      - section3.3.2
+
+  - name: 3.3.3 Disable IPv6 (disable in network config) (Not Scored)
+    lineinfile:
+      state=present
+      dest=/etc/sysconfig/network
+      regexp=^NETWORKING_IPV6
+      line=NETWORKING_IPV6=no
+    when: disable_ipv6 and ansible_distribution_major_version == '6'
+    tags:
+      - notscored
+      - section3.3
+      - section3.3.3
+
+  - name: 3.3.3 Disable IPv6 (disable in network config) (Not Scored)
+    lineinfile:
+      state=present
+      dest=/etc/sysconfig/network
+      regexp=^IPV6INIT
+      line=IPV6INIT=no
+    when: disable_ipv6 and ansible_distribution_major_version == '6'
+    tags:
+      - notscored
+      - section3.3
+      - section3.3.3
+
+  - name: 3.3.3 Disable IPv6 (disable via modprobe) (Not Scored)
+    lineinfile: >
+      state=present
+      create=yes
+      dest=/etc/modprobe.d/ipv6.conf
+      line="options ipv6 disable=1"
+    when: disable_ipv6 and ansible_distribution_major_version == '6'
+    tags:
+      - notscored
+      - section3.3
+      - section3.3.3
+
+  - name: 3.3.3 Disable IPv6 (disable ip6tables) (Not Scored)
+    service: >
+      name=ip6tables
+      enabled=no
+      state=stopped
+    when: disable_ipv6 and ansible_distribution_major_version == '6'
+    tags:
+      - notscored
+      - section3.3
+      - section3.3.3
+
+  - name: 3.3.3 Disable IPv6 (flush routes) (Not Scored)
+    command: /sbin/sysctl -w net.ipv6.route.flush=1
+    ignore_errors: yes
+    when: disable_ipv6 and ansible_distribution_major_version == '6'
+    tags:
+      - notscored
+      - section3.3
+      - section3.3.3
+
+  - name: 3.3.3 Disable IPv6 RHEL 7(Not Scored)
+    sysctl:
+      sysctl_file=/etc/sysctl.d/10-cis.conf
+      name=net.ipv6.conf.all.disable_ipv6
+      value=1
+      state=present
+      ignoreerrors=true
+    when: disable_ipv6 and ansible_distribution_major_version == '7'
+    tags:
+      - notscored
+      - section3.3
+      - section3.3.3

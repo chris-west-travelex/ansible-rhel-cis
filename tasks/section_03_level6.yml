@@ -1,0 +1,42 @@
+---
+  - name: TODO
+    debug: msg="TODO: host firewall configuration"
+
+  - name: 3.6 Enable IPtables (Scored)
+    service: >
+      name=iptables
+      enabled=yes
+      state=started
+    when: enable_iptables and ansible_distribution_major_version == '6'
+    tags:
+      - scored
+      - section3.6
+
+  - name: 3.6 Enable IP6tables (Not Scored)
+    service: >
+      name=ip6tables
+      enabled=yes
+      state=started
+    ignore_errors: yes
+    when: enable_ip6tables and ansible_distribution_major_version == '6'
+    tags:
+      - notscored
+      - section3.6
+
+  - name: 3.6 Make Sure Firewalld is installed
+    yum:
+      name=firewalld
+      state=present
+    tags:
+      - scored
+      - section3.6
+
+  - name: 3.6 Enable IPtables CentOS/RHEL 7(Scored)
+    service: >
+      name=firewalld
+      enabled=yes
+      state=started
+    when: enable_iptables and ansible_distribution_major_version == '7'
+    tags:
+      - scored
+      - section3.6

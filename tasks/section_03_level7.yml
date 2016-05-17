@@ -1,0 +1,12 @@
+---
+  - name: 3.7 Wireless Networking (Not Scored)
+    # the intention here is to delete all the wlan interfaces and switch
+    # radio off via the network manager.
+    shell: "for IF in $(ls /sys/class/net | grep wlan); do echo ip link set $IF down; echo rm -f /etc/sysconfig/network-scripts/ifcfg-$IF; done; nmcli radio all off"
+    args:
+      removes: "/sys/class/net/wlan0"
+    when: disable_wifi
+    tags:
+      - notscored
+      - section3.7
+
