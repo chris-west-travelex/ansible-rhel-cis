@@ -171,17 +171,6 @@
     - section2.2
     - section2.2.5
 
-
-- name: 2.2.6 Remove LDAP (Not Scored)
-  yum: >
-    name=openldap-clients
-    state=absent
-  when: ldap_client
-  tags:
-    - notscored
-    - section2.2
-    - section2.2.6
-
 - name: 2.2.6 Remove LDAP (Not Scored)
   yum: >
     name=openldap-servers

@@ -1,0 +1,48 @@
+---
+- name: 2.3.1 Remove NIS Client (Scored)
+    yum: >
+      name=ypbind
+      state=absent
+    tags:
+      - scored
+      - section2.3
+      - section2.3.1
+
+- name: 2.3.2 Remove rsh (Scored)
+  yum: >
+    name=rsh
+    state=absent
+  tags:
+    - scored
+    - section2.3
+    - section2.3.2
+
+- name: 2.3.3 Remove talk (Scored)
+  yum: >
+    name=talk
+    state=absent
+  tags:
+    - scored
+    - section2.3
+    - section2.3.3
+
+- name: 2.3.4 Remove telnet (Scored)
+  yum: >
+    name=telnet
+    state=absent
+  tags:
+    - scored
+    - section2.3
+    - section2.3.4
+
+- name: 2.3.5 Remove LDAP (Not Scored)
+  yum: >
+    name=openldap-clients
+    state=absent
+  when: ldap_client
+  tags:
+    - notscored
+    - section2.3
+    - section2.3.5
+
+

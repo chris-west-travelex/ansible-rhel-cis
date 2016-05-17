@@ -8,3 +8,8 @@
   tags:
     - section2
     - level2
+
+- include: section_02_level3.yml
+  tags:
+    - section2
+    - level3

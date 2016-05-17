@@ -218,8 +218,11 @@
 
 - name: 2.1.9 Remove tftp-server (Scored)
   yum: >
-    name=tftp-server
+    name="{{item}}"
     state=absent
+  with_items:
+    - tftp-server
+    - tftp
   tags:
     - scored
     - section2.1
