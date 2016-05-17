@@ -1,6 +1,6 @@
 # Regex to match daemons that we'll tolerate running in initrc_t SELinux
 # context (CIS 1.2.6)
-
+tolerate_unconfined_daemons_regex: sisipsmon
 
 # Should we configure AIDE on the system? (CIS 1.3)
 # Options:

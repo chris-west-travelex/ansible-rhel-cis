@@ -1,70 +1,61 @@
 ---
-- name: 1.5.1 Set User/Group Owner on /etc/grub.conf (Scored)
-  file:
-    path=/boot/grub/grub.conf
-    owner=root
-    group=root
-    mode=0600
+- name: 1.5.1 Restrict core dumps (Scored) - via pam
+  lineinfile: >
+    dest=/etc/security/limits.conf
+    line="* hard core 0"
+    insertafter=EOF
   tags:
     - scored
     - section1.5
     - section1.5.1
-  when: ansible_distribution_major_version == '6'
 
-
-- name: 1.5.1 Set User/Group Owner on /etc/grub.conf (Scored)
-  file:
-    path=/boot/grub2/grub.cfg
-    owner=root
-    group=root
+- name: 1.5.1 Restrict core dumps (Scored) - via sysctl
+  sysctl: >
+    name=fs.suid_dumpable
+    value=0
+    state=present
+    ignoreerrors=yes
   tags:
     - scored
     - section1.5
     - section1.5.1
-  when: ansible_distribution_major_version == '7'
 
-- name: 1.5.2 Set Permissions on /boot/grub/grub.conf (Scored)
-  file:
-    path=/boot/grub/grub.conf
-    mode=0400
+- name: 1.5.2 Configure ExecShield (Scored)
+  sysctl: >
+    name=kernel.exec-shield
+    value=1
+    state=present
+    ignoreerrors=yes
   tags:
     - scored
     - section1.5
     - section1.5.2
   when: ansible_distribution_major_version == '6'
 
-- name: 1.5.2 Set Permissions on /boot/grub2/grub.cfg (Scored)
-  file:
-    path=/boot/grub2/grub.cfg
-    mode=0400
-  when: ansible_distribution_major_version == '7'
+- name: 1.5.2 Ensure XD/NX support is enabled (Not Scored)
+  shell: "dmesg | grep NX"
   tags:
-    - scored
     - section1.5
     - section1.5.2
+  when: ansible_distribution_major_version == '7'
 
-
-- name: 1.5.3 Set boot loader password (Scored)
-  debug: msg="*** Too destructive for production systems. Evaluate for your environment first. Not relevant for public cloud."
+- name: 1.5.3 Enable Randomized Virtual Memory Region Placement (Scored)
+  sysctl: >
+    name=kernel.randomize_va_space
+    value=2
+    state=present
+    ignoreerrors=yes
   tags:
     - scored
     - section1.5
     - section1.5.3
 
-- name: 1.5.4 Require authentication for single-user mode (Scored)
-  debug: msg="*** Too destructive for production systems. Evaluate for your environment first. Not relevant for public cloud."
+- name: 1.5.4 Ensure prelink is disabled (Scored)
+  yum: >
+    name=prelink
+    state=removed
   tags:
     - scored
     - section1.5
     - section1.5.4
-
-- name: 1.5.5 Disable Interactive Boot (Scored)
-  lineinfile: >
-    dest=/etc/sysconfig/init
-    regexp=^PROMPT=
-    line=PROMPT=no
-  tags:
-    - scored
-    - section1.5
-    - section1.5.5
 

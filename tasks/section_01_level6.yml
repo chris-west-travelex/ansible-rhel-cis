@@ -1,45 +1,108 @@
 ---
-- name: 1.6.1 Restrict core dumps (Scored) - via pam
+- name: 1.6.1.1 Ensure SELinux is not disabled in /etc/grub.conf (Scored)
   lineinfile: >
-    dest=/etc/security/limits.conf
-    line="* hard core 0"
-    insertafter=EOF
+    state=absent
+    dest=/etc/grub.conf
+    line="selinux=0"
+  when: ansible_distribution_major_version == '6'
   tags:
     - scored
     - section1.6
     - section1.6.1
+    - section1.6.1.1
 
-- name: 1.6.1 Restrict core dumps (Scored) - via sysctl
-  sysctl: >
-    name=fs.suid_dumpable
-    value=0
-    state=present
-    ignoreerrors=yes
+- name: 1.6.1.1 Ensure SELinux is not disabled in /etc/grub.conf (Scored)
+  lineinfile: >
+    state=absent
+    dest=/etc/grub.conf
+    line="enforcing=0"
+  when: ansible_distribution_major_version == '6'
   tags:
     - scored
     - section1.6
     - section1.6.1
+    - section1.6.1.1
 
-- name: 1.6.2 Configure ExecShield (Scored)
-  sysctl: >
-    name=kernel.exec-shield
-    value=1
+- name: 1.6.1.1 Ensure SELinux is not disabled in /boot/grub2/grub.cfg (Scored)
+  lineinfile: >
+    state=absent
+    dest=/boot/grub2/grub.cfg
+    line="selinux=0"
+  when: ansible_distribution_major_version == '7'
+  tags:
+    - scored
+    - section1.6
+    - section1.6.1
+    - section1.6.1.1
+
+- name: 1.6.1.1 Ensure SELinux is not disabled in /boot/grub2/grub.cfg (Scored)
+  lineinfile: >
+    state=absent
+    dest=/boot/grub2/grub.cfg
+    line="enforcing=0"
+  when: ansible_distribution_major_version == '7'
+  tags:
+    - scored
+    - section1.6
+    - section1.6.1
+    - section1.6.1.1
+
+- name: 1.6.1.2 Set the SELinux State (Scored)
+  yum: >
+    name=selinux-policy-targeted
     state=present
-    ignoreerrors=yes
+  tags:
+    - scored
+    - section1.6
+    - section1.6.1
+    - section1.6.1.2
+
+- name: 1.6.1.3 Set the SELinux Policy (Scored)
+  selinux: >
+    state=enforcing
+    policy=targeted
+  ignore_errors: yes
+  tags:
+    - scored
+    - section1.6
+    - section1.6.1
+    - section1.6.1.3
+
+- name: 1.6.1.4 Remove SETroubleshoot (Scored)
+  yum: >
+    name=setroubleshoot
+    state=absent
+  tags:
+    - scored
+    - section1.6
+    - section1.6.1
+    - section1.6.1.4
+
+- name: 1.6.1.5 Remove MCS Translation Service (mcstrans) (Scored)
+  yum: >
+    name=mcstrans
+    state=absent
+  tags:
+    - scored
+    - section1.6
+    - section1.6.1
+    - section1.6.1.5
+
+- name: 1.6.1.6 Check for unconfined daemons (Scored)
+  shell: ps -eZ | egrep "initrc" | egrep -vw "tr|ps|egrep|bash|awk|{{tolerate_unconfined_daemons_regex}}" | tr ':' ' ' | awk '{print $NF }' | wc -l | grep 0 && touch /tmp/.cis-1.6.1.6
+  args:
+    creates: "/tmp/.cis-1.6.1.6"
+  tags:
+    - scored
+    - section1.6
+    - section1.6.1
+    - section1.6.1.6
+
+- name: 1.6.2 Ensure SELinux is installed (Scored)
+  yum: >
+    name=libselinux
+    state=latest
   tags:
     - scored
     - section1.6
     - section1.6.2
-  when: ansible_distribution_major_version == '6'
-
-- name: 1.6.3 Enable Randomized Virtual Memory Region Placement (Scored)
-  sysctl: >
-    name=kernel.randomize_va_space
-    value=2
-    state=present
-    ignoreerrors=yes
-  tags:
-    - scored
-    - section1.6
-    - section1.6.3
-

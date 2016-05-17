@@ -1,90 +1,39 @@
 ---
-- name: 1.4.1 Ensure SELinux is not disabled in /etc/grub.conf (Scored)
-  lineinfile: >
-    state=absent
-    dest=/etc/grub.conf
-    line="selinux=0"
+- name: 1.4.1 Set User/Group Owner on /etc/grub.conf (Scored)
+  file:
+    path=/boot/grub/grub.conf
+    owner=root
+    group=root
+    mode=0600
+  tags:
+    - scored
+    - section1.4
+    - section1.4.1
   when: ansible_distribution_major_version == '6'
+
+
+- name: 1.4.1 Set User/Group Owner on /etc/grub.conf (Scored)
+  file:
+    path=/boot/grub2/grub.cfg
+    owner=root
+    group=root
   tags:
     - scored
     - section1.4
     - section1.4.1
-
-- name: 1.4.1 Ensure SELinux is not disabled in /etc/grub.conf (Scored)
-  lineinfile: >
-    state=absent
-    dest=/etc/grub.conf
-    line="enforcing=0"
-  when: ansible_distribution_major_version == '6'
-  tags:
-    - scored
-    - section1.4
-    - section1.4.1
-
-- name: 1.4.1 Ensure SELinux is not disabled in /boot/grub2/grub.cfg (Scored)
-  lineinfile: >
-    state=absent
-    dest=/boot/grub2/grub.cfg
-    line="selinux=0"
   when: ansible_distribution_major_version == '7'
-  tags:
-    - scored
-    - section1.4
-    - section1.4.1
 
-- name: 1.4.1 Ensure SELinux is not disabled in /boot/grub2/grub.cfg (Scored)
-  lineinfile: >
-    state=absent
-    dest=/boot/grub2/grub.cfg
-    line="enforcing=0"
-  when: ansible_distribution_major_version == '7'
-  tags:
-    - scored
-    - section1.4
-    - section1.4.1
-
-- name: 1.4.2 Set the SELinux State (Scored)
-  yum: >
-    name=selinux-policy-targeted
-    state=present
+- name: 1.4.2 Set boot loader password (Scored)
+  debug: msg="*** Too destructive for production systems. Evaluate for your environment first. Not relevant for public cloud."
   tags:
     - scored
     - section1.4
     - section1.4.2
 
-- name: 1.4.3 Set the SELinux Policy (Scored)
-  selinux: >
-    state=enforcing
-    policy=targeted
-  ignore_errors: yes
+- name: 1.4.3 Require authentication for single-user mode (Scored)
+  debug: msg="*** Too destructive for production systems. Evaluate for your environment first. Not relevant for public cloud."
   tags:
     - scored
     - section1.4
     - section1.4.3
 
-- name: 1.4.4 Remove SETroubleshoot (Scored)
-  yum: >
-    name=setroubleshoot
-    state=absent
-  tags:
-    - scored
-    - section1.4
-    - section1.4.4
-
-- name: 1.4.5 Remove MCS Translation Service (mcstrans) (Scored)
-  yum: >
-    name=mcstrans
-    state=absent
-  tags:
-    - scored
-    - section1.4
-    - section1.4.5
-
-- name: 1.4.6 Check for unconfined daemons (Scored)
-  shell: ps -eZ | egrep "initrc" | egrep -vw "tr|ps|egrep|bash|awk" | tr ':' ' ' | awk '{print $NF }' | wc -l | grep 0 && touch /tmp/.cis-1.4.6
-  args:
-    creates: "/tmp/.cis-1.4.6"
-  tags:
-    - scored
-    - section1.4
-    - section1.4.6
