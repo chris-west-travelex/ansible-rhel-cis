@@ -1,0 +1,313 @@
+---
+- name: 2.2.1.1 Ensure time synchronisation is in use (Not Scored)
+  yum: >
+    pkg=ntp
+    state=installed
+  always_run: yes
+  when: ansible_distribution_major_version == '6'
+  tags:
+    - scored
+    - section2.2
+    - section2.2.1
+    - section2.2.1.1
+
+- name: 2.2.1.1 Configure Network Time Protocol (ipv4) (Scored)
+  service: >
+    name=ntpd
+    state=started
+    enabled=yes
+  when: ansible_distribution_major_version == '6'
+  tags:
+    - scored
+    - section2.2
+    - section2.2.1
+    - section2.2.1.1
+
+- name: 2.2.1.1 Configure Network Time Protocol (ipv4) (Scored)
+  yum: >
+    pkg=chrony
+    state=installed
+  always_run: yes
+  when: ansible_distribution_major_version == '7'
+  tags:
+    - scored
+    - section2.2
+    - section2.2.1
+    - section2.2.1.1
+
+- name: 2.2.1.1 Configure Network Time Protocol (ipv4) (Scored)
+  service: >
+    name=chronyd
+    state=started
+    enabled=yes
+  when: ansible_distribution_major_version == '7'
+  tags:
+    - scored
+    - section2.2
+    - section2.2.1
+    - section2.2.1.1
+
+- name: 2.2.1.2 Configure Network Time Protocol (ipv4) (Scored)
+  # TODO: there are other hardening steps in the benchmark
+  lineinfile: >
+    dest=/etc/ntp.conf
+    state=present
+    regexp="^restrict default"
+    line="restrict default kod nomodify notrap nopeer noquery"
+    insertafter=EOF
+  when: ansible_distribution_major_version == '6'
+  tags:
+    - scored
+    - section2.2
+    - section2.2.1
+    - section2.2.1.2
+
+- name: 2.2.1.2 Configure Network Time Protocol (ipv6) (Scored)
+  lineinfile: >
+    dest=/etc/ntp.conf
+    state=present
+    regexp="^restrict -6 default"
+    line="restrict -6 default kod nomodify notrap nopeer noquery"
+    insertafter=EOF
+  when: ansible_distribution_major_version == '6'
+  tags:
+    - scored
+    - section2.2
+    - section2.2.1
+    - section2.2.1.2
+
+- name: 2.2.1.3 Configure Network Time Protocol (ipv4) (Scored)
+  lineinfile: >
+    dest=/etc/sysconfig/chronyd
+    state=present
+    regexp="^OPTIONS="
+    line='OPTIONS="-u chrony"'
+  when: ansible_distribution_major_version == '7'
+  tags:
+    - scored
+    - section2.2
+    - section2.2.1
+    - section2.2.1.3
+
+- name: 2.2.1.3 Configure Network Time Protocol (ipv4) (Scored)
+  command: "egrep -q '^server ' /etc/chrony.conf"
+  when: ansible_distribution_major_version == '7'
+  tags:
+    - scored
+    - section2.2
+    - section2.2.1
+    - section2.2.1.3
+
+- name: 2.2.1.3 Configure Network Time Protocol (ipv4) (Scored)
+  # from http://chrony.tuxfamily.org/faq.html#_how_can_i_make_code_chronyd_code_more_secure
+  lineinfile: >
+    dest=/etc/chrony.conf
+    state=present
+    line="{{item}}"
+    insertafter=EOF
+  with_items:
+    - "port 0"
+    - "cmdport 0"
+  when: ansible_distribution_major_version == '7'
+  tags:
+    - scored
+    - section2.2
+    - section2.2.1
+    - section2.2.1.3
+
+- name: 2.2.2 Remove X Windows (runlevel 3) (Scored)
+  lineinfile: >
+    dest=/etc/inittab
+    state=present
+    regexp="^id:"
+    line="id:3:initdefault:"
+  when: ansible_distribution_major_version == '6'
+  tags:
+    - scored
+    - section2.2
+    - section2.2.2
+
+- name: 2.2.2 Remove X Windows (multi-user.target) (scored)
+  command: systemctl set-default multi-user.target
+  when: ansible_distribution_major_version == '7'
+  tags:
+    - scored
+    - section2.2
+    - section2.2.2
+
+- name: 2.2.2 Remove X Windows (remove package group) (Scored)
+  yum:
+    name=xorg-x11-server-common
+    state=absent
+  tags:
+    - scored
+    - section2.2
+    - section2.2.2
+
+- name: 2.2.3 Disable Avahi Server (remove service) (scored)
+  yum:
+    name=avahi
+    state=absent
+  tags:
+    - scored
+    - section2.2
+    - section2.2.3
+
+- name: 2.2.4 Disable Print Server - CUPS (remove service) (Not Scored)
+  yum:
+    name=cups
+    state=absent
+  tags:
+    - notscored
+    - section2.2
+    - section2.2.4
+
+- name: 2.2.5 Remove DHCP Server (Scored)
+  yum: >
+    name=dhcp
+    state=absent
+  tags:
+    - scored
+    - section2.2
+    - section2.2.5
+
+
+- name: 2.2.6 Remove LDAP (Not Scored)
+  yum: >
+    name=openldap-clients
+    state=absent
+  when: ldap_client
+  tags:
+    - notscored
+    - section2.2
+    - section2.2.6
+
+- name: 2.2.6 Remove LDAP (Not Scored)
+  yum: >
+    name=openldap-servers
+    state=absent
+  when: ldap_server
+  tags:
+    - notscored
+    - section2.2
+    - section2.2.6
+
+- name: 2.2.7 Disable NFS and RPC (nfs-utils services) (Not Scored)
+  service: >
+    name={{ item }}
+    state=stopped
+    enabled=no
+  when: nfs
+  with_items:
+    - nfs
+    - rpcbind
+    - nfslock
+    - rpcgssd
+    - rpcidmapd
+    - rpcsvcgssd
+  tags:
+    - notscored
+    - section2.2
+    - section2.2.7
+
+- name: 2.2.8 Remove DNS Server (Not Scored)
+  yum: >
+    name=bind
+    state=absent
+  when: dns
+  tags:
+    - notscored
+    - section2.2
+    - section2.2.8
+
+- name: 2.2.9 Remove FTP Server (Not Scored)
+  yum: >
+    name=vsftpd
+    state=absent
+  when: ftp
+  tags:
+    - notscored
+    - section2.2
+    - section2.2.9
+
+- name: 2.2.10 Remove HTTP Server (Not Scored)
+  yum: >
+    name=httpd
+    state=absent
+  when: httpd
+  tags:
+    - notscored
+    - section2.2
+    - section2.2.10
+
+- name: 2.2.11 Remove Dovecot (IMAP and POP3 services) (Not Scored)
+  yum: >
+    name=dovecot
+    state=absent
+  when: dovecot
+  tags:
+    - notscored
+    - section2.2
+    - section2.2.11
+
+- name: 2.2.12 Remove Samba (Not Scored)
+  yum: >
+    name=samba
+    state=absent
+  when: samba
+  tags:
+    - notscored
+    - section2.2
+    - section2.2.12
+
+- name: 2.2.13 Remove HTTP Proxy Server (Not Scored)
+  yum: >
+    name=squid
+    state=absent
+  when: squid
+  tags:
+    - notscored
+    - section2.2
+    - section2.2.13
+
+- name: 2.2.14 Remove SNMP Server (Not Scored)
+  yum: >
+    name=net-snmp
+    state=absent
+  when: snmp
+  tags:
+    - notscored
+    - section2.2
+    - section2.2.14
+
+- name: 2.2.15 Configure Mail Transfer Agent for Local-Only Mode (Scored)
+  yum: >
+    name=postfix
+    state=present
+  tags:
+    - scored
+    - section2.2
+    - section2.2.15
+
+- name: 2.2.15 Configure Mail Transfer Agent for Local-Only Mode (Scored)
+  lineinfile: >
+    backup=yes
+    state=present
+    dest=/etc/postfix/main.cf
+    backrefs=yes
+    regexp="^inet_interfaces"
+    line="inet_interfaces = localhost"
+  ignore_errors: yes
+  tags:
+    - scored
+    - section2.2
+    - section2.2.15
+
+- name: 2.2.16 Remove NIS Server (Scored)
+  yum: >
+    name=ypserv
+    state=absent
+  tags:
+    - scored
+    - section2.2
+    - section2.2.16
