@@ -598,16 +598,16 @@
       - section3.3
       - section3.3.3
 
-  - name: 4.5.1 Install TCP Wrappers (Not Scored)
+  - name: 3.4.1 Install TCP Wrappers (Scored)
     yum: >
       name=tcp_wrappers
       state=present
     tags:
-      - notscored
-      - section4.5
-      - section4.5.1
+      - scored
+      - section3.4
+      - section3.4.1
 
-  - name: 4.5.2 Create /etc/hosts.allow (Not Scored)
+  - name: 3.4.2 Create /etc/hosts.allow (Scored)
     lineinfile: >
       state=present
       create=yes
@@ -615,40 +615,40 @@
       regexp=^ALL
       line=ALL:{{ tcp_allow | default("ALL") }}
     tags:
-      - notscored
-      - section4.5
-      - section4.5.2
-
-  - name: 4.5.3 Verify Permissions on /etc/hosts.allow (Scored)
-    file: >
-      path=/etc/hosts.allow
-      mode=0644
-    tags:
       - scored
-      - section4.5
-      - section4.5.3
+      - section3.4
+      - section3.4.2
 
-  - name: 4.5.4 Create /etc/hosts.deny (Not Scored)
+  - name: 3.4.3 Create /etc/hosts.deny (Scored)
     lineinfile: >
       state=present
       create=yes
       dest=/etc/hosts.deny
       line=ALL:ALL
     tags:
-      - notscored
-      - section4.5
-      - section4.5.4
+      - scored
+      - section3.4
+      - section3.4.3
+ 
+  - name: 3.4.4 Verify Permissions on /etc/hosts.allow (Scored)
+    file: >
+      path=/etc/hosts.allow
+      mode=0644
+    tags:
+      - scored
+      - section3.4
+      - section3.4.4
 
-  - name: 4.5.5 Verify Permissions on /etc/hosts.deny (Scored)
+  - name: 3.4.5 Verify Permissions on /etc/hosts.deny (Scored)
     file: >
       path=/etc/hosts.deny
       mode=0644
     tags:
       - scored
-      - section4.5
-      - section4.5.5
+      - section3.4
+      - section3.4.5
 
-  - name: 4.6.1 Disable DCCP (Not Scored)
+  - name: 3.5.1 Disable DCCP (Not Scored)
     lineinfile: >
       state=present
       create=yes
@@ -656,10 +656,10 @@
       line="install dccp /bin/true"
     tags:
       - notscored
-      - section4.6
-      - section4.6.1
+      - section3.5
+      - section3.5.1
 
-  - name: 4.6.2 Disable SCTP (Not Scored)
+  - name: 3.5.2 Disable SCTP (Not Scored)
     lineinfile: >
       state=present
       create=yes
@@ -667,10 +667,10 @@
       line="install sctp /bin/true"
     tags:
       - notscored
-      - section4.6
-      - section4.6.2
+      - section3.5
+      - section3.5.2
 
-  - name: 4.6.3 Disable RDS (Not Scored)
+  - name: 3.5.3 Disable RDS (Not Scored)
     lineinfile: >
       state=present
       create=yes
@@ -678,10 +678,10 @@
       line="install rds /bin/true"
     tags:
       - notscored
-      - section4.6
-      - section4.6.3
+      - section3.5
+      - section3.5.3
 
-  - name: 4.6.4 Disable TIPC (Not Scored)
+  - name: 3.5.4 Disable TIPC (Not Scored)
     lineinfile: >
       state=present
       create=yes
@@ -689,10 +689,10 @@
       line="install tipc /bin/true"
     tags:
       - notscored
-      - section4.6
-      - section4.6.4
+      - section3.5
+      - section3.5.4
 
-  - name: 4.7 Enable IPtables (Scored)
+  - name: 3.6 Enable IPtables (Scored)
     service: >
       name=iptables
       enabled=yes
@@ -700,9 +700,9 @@
     when: enable_iptables and ansible_distribution_major_version == '6'
     tags:
       - scored
-      - section4.7
+      - section3.6
 
-  - name: 4.8 Enable IP6tables (Not Scored)
+  - name: 3.6 Enable IP6tables (Not Scored)
     service: >
       name=ip6tables
       enabled=yes
@@ -711,17 +711,17 @@
     when: enable_ip6tables and ansible_distribution_major_version == '6'
     tags:
       - notscored
-      - section4.8
+      - section3.6
 
-  - name: 4.7 Make Sure Firewalld is installed
+  - name: 3.6 Make Sure Firewalld is installed
     yum:
       name=firewalld
       state=present
     tags:
       - scored
-      - section4.7
+      - section3.6
 
-  - name: 4.7 Enable IPtables Centos/Rhel 7(Scored)
+  - name: 3.6 Enable IPtables CentOS/RHEL 7(Scored)
     service: >
       name=firewalld
       enabled=yes
@@ -729,4 +729,4 @@
     when: enable_iptables and ansible_distribution_major_version == '7'
     tags:
       - scored
-      - section4.7
+      - section3.6
