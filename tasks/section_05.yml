@@ -24,3 +24,8 @@
     tags:
       - section5
       - level2
+
+  - include: section_05_level3.yml
+    tags:
+      - section5
+      - level3

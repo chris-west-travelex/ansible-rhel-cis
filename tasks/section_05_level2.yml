@@ -1,156 +1,244 @@
 ---
-#
-# Copyright 2014 Major Hayden
-#
-#   Licensed under the Apache License, Version 2.0 (the "License");
-#   you may not use this file except in compliance with the License.
-#   You may obtain a copy of the License at
-#
-#       http://www.apache.org/licenses/LICENSE-2.0
-#
-#   Unless required by applicable law or agreed to in writing, software
-#   distributed under the License is distributed on an "AS IS" BASIS,
-#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#   See the License for the specific language governing permissions and
-#   limitations under the License.
-#
-
-  - name: 5.2.1.1 Configure Data Retention (Not Scored)
-    lineinfile: >
-      state=present
-      dest=/etc/audit/auditd.conf
-      regexp="^max_log_file ="
-      line="max_log_file = {{ max_log_file }}"
-    notify: Reload auditd Rules
-    tags:
-      - notscored
-      - section5.2
-      - section5.2.1
-      - section5.2.1.1
-
-  - name: 5.2.1.2 Disable System on Audit Log Full (Not Scored)
-    lineinfile: >
-      state=present
-      dest=/etc/audit/auditd.conf
-      regexp="^space_left_action ="
-      line="space_left_action = {{ space_left_action }}"
-    notify: Reload auditd Rules
-    tags:
-      - notscored
-      - section5.2
-      - section5.2.1
-      - section5.2.1.2
-
-  - name: 5.2.1.2 Disable System on Audit Log Full (Not Scored)
-    lineinfile: >
-      state=present
-      dest=/etc/audit/auditd.conf
-      regexp="^action_mail_acct ="
-      line="action_mail_acct = {{ action_mail_acct }}"
-    notify: Reload auditd Rules
-    tags:
-      - notscored
-      - section5.2
-      - section5.2.1
-      - section5.2.1.2
-
-  - name: 5.2.1.2 Disable System on Audit Log Full (Not Scored)
-    lineinfile: >
-      state=present
-      dest=/etc/audit/auditd.conf
-      regexp="^admin_space_left_action ="
-      line="admin_space_left_action = {{ admin_space_left_action }}"
-    notify: Reload auditd Rules
-    tags:
-      - notscored
-      - section5.2
-      - section5.2.1
-      - section5.2.1.2
-
-  - name: 5.2.1.3 Keep All Auditing Information (Scored)
-    lineinfile: >
-      state=present
-      dest=/etc/audit/auditd.conf
-      regexp="^max_log_file_action ="
-      line="max_log_file_action = {{ max_log_file_action }}"
-    notify: Reload auditd Rules
+  - name: 5.2.1 Set Permissions on /etc/ssh/sshd_config (Scored)
+    file: >
+      path=/etc/ssh/sshd_config
+      owner=root
+      group=root
+      mode=0600
+    notify: Reload sshd
     tags:
       - scored
       - section5.2
       - section5.2.1
-      - section5.2.1.3
 
-  - name: 5.2.2 Enable auditd Service (Scored)
-    service: >
-      name=auditd
-      enabled=yes
-      state=running
+  - name: 5.2.2 Set SSH Protocol to 2 (Scored)
+    lineinfile: >
+      dest=/etc/ssh/sshd_config
+      regexp="^Protocol " line="Protocol 2"
+    notify: Reload sshd
     tags:
       - scored
       - section5.2
       - section5.2.2
 
-  - name: 5.2.3 Enable Auditing for Processes That Start Prior to auditd (Scored)
+  - name: 5.2.3 Set LogLevel to INFO (Scored)
     lineinfile: >
-      state=present
-      dest=/etc/grub.conf
-      backrefs=yes
-      regexp="(^\s*kernel.*)$(?<!audit=1)"
-      line="\1 audit=1"
+      dest=/etc/ssh/sshd_config
+      regexp="^LogLevel "
+      line="LogLevel INFO"
+    notify: Reload sshd
     tags:
       - scored
       - section5.2
       - section5.2.3
-    when: ansible_distribution_major_version == '6'
 
-  - name: 5.2.3 Enable Auditing for Processes That Start Prior to auditd (Scored) -- Make sure grub2 tools are installed
-    yum: name=grub2-tools state=present
-    tags:
-      - scored
-      - section5.2
-      - section5.2.3
-    when: ansible_distribution_major_version == '7'
-
-  - name: 5.2.3 Enable Auditing for Processes That Start Prior to auditd (Scored)
-    lineinfile:
-      state=present
-      dest=/etc/default/grub
-      line='GRUB_CMDLINE_LINUX="audit=1 ${GRUB_CMDLINE_LINUX}"'
-      insertafter=EOF
-    tags:
-      - scored
-      - section5.2
-      - section5.2.3
-    when: ansible_distribution_major_version == '7'
-
-  - name: 5.2.3 Enable Auditing for Processes That Start Prior to auditd (Scored) -- Run grub2-mkconfig after changes
-    command: grub2-mkconfig -o /boot/grub2/grub.cfg
-    tags:
-      - scored
-      - section5.2
-      - section5.2.3
-    when: ansible_distribution_major_version == '7'
-
-  - name: 5.2.4 - 5.2.18 Configure auditd Rules (Scored)
-    copy: >
-      src=etc/audit/audit.rules
-      dest=/etc/audit/audit.rules
-    notify: Reload auditd Rules
+  - name: 5.2.4 Disable SSH X11 Forwarding (Scored)
+    lineinfile: >
+      dest=/etc/ssh/sshd_config
+      regexp="^X11Forwarding "
+      line="X11Forwarding no"
+    notify: Reload sshd
     tags:
       - scored
       - section5.2
       - section5.2.4
+
+  - name: 5.2.5 Set SSH MaxAuthTries to 4 or Less (Scored)
+    lineinfile: >
+      dest=/etc/ssh/sshd_config
+      regexp="^MaxAuthTries "
+      line="MaxAuthTries 4"
+    notify: Reload sshd
+    tags:
+      - scored
+      - section5.2
       - section5.2.5
+
+  - name: 5.2.6 Set SSH IgnoreRhosts to Yes (Scored)
+    lineinfile: >
+      dest=/etc/ssh/sshd_config
+      regexp="^IgnoreRhosts "
+      line="IgnoreRhosts yes"
+    notify: Reload sshd
+    tags:
+      - scored
+      - section5.2
       - section5.2.6
+
+  - name: 5.2.7 Set SSH HostbasedAuthentication to No (Scored)
+    lineinfile: >
+      dest=/etc/ssh/sshd_config
+      regexp="^HostbasedAuthentication "
+      line="HostbasedAuthentication no"
+    notify: Reload sshd
+    tags:
+      - scored
+      - section5.2
       - section5.2.7
+
+  - name: 5.2.8 Disable SSH Root Login (Scored)
+    lineinfile: >
+      dest=/etc/ssh/sshd_config
+      regexp="^PermitRootLogin "
+      line="PermitRootLogin no"
+    notify: Reload sshd
+    tags:
+      - scored
+      - section5.2
       - section5.2.8
+
+  - name: 5.2.9 Set SSH PermitEmptyPasswords to No (Scored)
+    lineinfile: >
+      dest=/etc/ssh/sshd_config
+      regexp="^PermitEmptyPasswords "
+      line="PermitEmptyPasswords no"
+    notify: Reload sshd
+    tags:
+      - scored
+      - section5.2
       - section5.2.9
+
+  - name: 5.2.10 Do Not Allow Users to Set Environment Options (Scored)
+    lineinfile: >
+      dest=/etc/ssh/sshd_config
+      regexp="^PermitUserEnvironment "
+      line="PermitUserEnvironment no"
+    notify: Reload sshd
+    tags:
+      - scored
+      - section5.2
       - section5.2.10
+
+  - name: 5.2.11 Use Only Approved Cipher in Counter Mode (Scored)
+    # extending this to include recommendations from Mozilla:
+    # https://wiki.mozilla.org/Security/Guidelines/OpenSSH#Ciphers_and_algorithms_choice
+    # (CIS is a bit out of date on CTR vs. GCM)
+    lineinfile: >
+      dest=/etc/ssh/sshd_config
+      regexp="^Ciphers "
+      line="Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr"
+    notify: Reload sshd
+    tags:
+      - scored
+      - section5.2
       - section5.2.11
+
+  - name: 5.2.11 Use Only Approved Cipher in Counter Mode (Scored)
+    # extending this to include recommendations from Mozilla:
+    # https://wiki.mozilla.org/Security/Guidelines/OpenSSH#Ciphers_and_algorithms_choice
+    # (CIS is a bit out of date on CTR vs. GCM)
+    lineinfile: >
+      dest=/etc/ssh/sshd_config
+      regexp="^KexAlgorithms "
+      line="KexAlgorithms curve25519-sha256@libssh.org,ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256,diffie-hellman-group-exchange-sha256"
+    notify: Reload sshd
+    tags:
+      - scored
+      - section5.2
+      - section5.2.11
+
+  - name: 5.2.12 Ensure only approved MAC algorithms are used (Scored)
+    # extending this to include recommendations from Mozilla:
+    # https://wiki.mozilla.org/Security/Guidelines/OpenSSH#Ciphers_and_algorithms_choice
+    # (CIS is a bit out of date on CTR vs. GCM)
+    lineinfile: >
+      dest=/etc/ssh/sshd_config
+      regexp="^MACs "
+        line="MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com"
+    notify: Reload sshd
+    tags:
+      - scored
+      - section5.2
       - section5.2.12
+
+  - name: 5.2.13 Set Idle Timeout Interval for User Login (Scored)
+    lineinfile: >
+      dest=/etc/ssh/sshd_config
+      regexp="^ClientAliveInterval "
+      line="ClientAliveInterval 300"
+    notify: Reload sshd
+    tags:
+      - scored
+      - section5.2
       - section5.2.13
+
+  - name: 5.2.13 Set Idle Timeout Interval for User Login (Scored)
+    lineinfile: >
+      dest=/etc/ssh/sshd_config
+      regexp="^ClientAliveCountMax "
+      line="ClientAliveCountMax 0"
+    notify: Reload sshd
+    tags:
+      - scored
+      - section5.2
+      - section5.2.13
+
+  - name: 5.2.14 Ensure SSH LoginGraceTime is set to one minute or less (Scored)
+    lineinfile: >
+      dest=/etc/ssh/sshd_config
+      regexp="^LoginGraceTime "
+      line="LoginGraceTime 60"
+    notify: Reload sshd
+    tags:
+      - scored
+      - section5.2
       - section5.2.14
+
+  - name: 5.2.15 Limit Access via SSH (Scored)
+    lineinfile: >
+      dest=/etc/ssh/sshd_config
+      regexp="^AllowGroups "
+      line="AllowGroups {{ ssh_allow_groups }}"
+    when: ssh_allow_groups is defined
+    notify: Reload sshd
+    tags:
+      - scored
+      - section5.2
       - section5.2.15
+
+  - name: 5.2.15 Limit Access via SSH (Scored)
+    lineinfile: >
+      dest=/etc/ssh/sshd_config 
+      regexp="^AllowUsers "
+      line="AllowUsers {{ ssh_allow_users }}"
+    when: ssh_allow_users is defined
+    notify: Reload sshd
+    tags:
+      - scored
+      - section5.2
+      - section5.2.15
+
+  - name: 5.2.15 Limit Access via SSH (Scored)
+    lineinfile: >
+      dest=/etc/ssh/sshd_config
+      regexp="^DenyGroups "
+      line="DenyGroups {{ ssh_deny_groups }}"
+    when: ssh_deny_groups is defined
+    notify: Reload sshd
+    tags:
+      - scored
+      - section5.2
+      - section5.2.15
+
+  - name: 5.2.15 Limit Access via SSH (Scored)
+    lineinfile: >
+      dest=/etc/ssh/sshd_config
+      regexp="^DenyUsers "
+      line="DenyUsers {{ ssh_deny_users }}"
+    when: ssh_deny_users is defined
+    notify: Reload sshd
+    tags:
+      - scored
+      - section5.2
+      - section5.2.15
+
+  - name: 5.2.16 Set SSH Banner (Scored)
+    lineinfile: >
+      dest=/etc/ssh/sshd_config
+      regexp="^Banner "
+      line="Banner /etc/issue.net"
+    notify: Reload sshd
+    tags:
+      - scored
+      - section5.2
       - section5.2.16
-      - section5.2.17
-      - section5.2.18
