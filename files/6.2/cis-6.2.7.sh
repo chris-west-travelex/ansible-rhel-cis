@@ -1,22 +1,8 @@
 #!/bin/bash
 RET=0
-for dir in `/bin/cat /etc/passwd | /bin/egrep -v '(root|halt|sync|shutdown)' |\
-  /bin/awk -F: '($8 == "PS" && $7 != "/sbin/nologin") { print $6 }'`; do
-  dirperm=`/bin/ls -ld $dir | /bin/cut -f1 -d" "`
-  if [ `echo $dirperm | /bin/cut -c6 ` != "-" ]; then
-    echo "Group Write permission set on directory $dir"
-    RET=1
-  fi
-  if [ `echo $dirperm | /bin/cut -c8 ` != "-" ]; then
-    echo "Other Read permission set on directory $dir"
-    RET=1
-  fi
-  if [ `echo $dirperm | /bin/cut -c9 ` != "-" ]; then
-    echo "Other Write permission set on directory $dir"
-    RET=1
-  fi
-  if [ `echo $dirperm | /bin/cut -c10 ` != "-" ]; then
-    echo "Other Execute permission set on directory $dir"
+cat /etc/passwd | awk -F: '{ print $1 " " $3 " " $6 }' | while read user uid dir; do
+  if [ $uid -ge 1000 -a ! -d "$dir" -a $user != "nfsnobody" ]; then
+    echo "The home directory ($dir) of user $user does not exist."
     RET=1
   fi
 done

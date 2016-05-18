@@ -1,13 +1,36 @@
 #!/bin/bash
 RET=0
-cat /etc/passwd | awk -F: '{ print $1 " " $3 " " $6 }' | while read user uid dir; do
-  if [ $uid -ge 1000 -a -d "$dir" -a $user != "nfsnobody" ]; then
-    owner=$(stat -L -c "%U" "$dir")
-    if [ "$owner" != "$user" ]; then
-      echo "The home directory ($dir) of user $user is owned by $owner."
-      RET=1
+for dir in `/bin/cat /etc/passwd | /bin/egrep -v '(root|sync|halt|shutdown)' |\
+/bin/awk -F: '($7 != "/sbin/nologin") { print $6 }'`; do
+  for file in $dir/.netrc; do
+    if [ ! -h "$file" -a -f "$file" ]; then
+      fileperm=`/bin/ls -ld $file | /bin/cut -f1 -d" "`
+      if [ `echo $fileperm | /bin/cut -c5 ` != "-" ]; then
+        echo "Group Read set on $file"
+        RET=1
+      fi
+      if [ `echo $fileperm | /bin/cut -c6 ` != "-" ]; then
+        echo "Group Write set on $file"
+        RET=1
+      fi
+      if [ `echo $fileperm | /bin/cut -c7 ` != "-" ]; then
+        echo "Group Execute set on $file"
+        RET=1
+      fi
+      if [ `echo $fileperm | /bin/cut -c8 ` != "-" ]; then
+        echo "Other Read set on $file"
+        RET=1
+      fi
+      if [ `echo $fileperm | /bin/cut -c9 ` != "-" ]; then
+        echo "Other Write set on $file"
+        RET=1
+      fi
+      if [ `echo $fileperm | /bin/cut -c10 ` != "-" ]; then
+        echo "Other Execute set on $file"
+        RET=1
+      fi
     fi
-  fi
+  done
 done
 
-exit ${RET}
+echo ${RET}

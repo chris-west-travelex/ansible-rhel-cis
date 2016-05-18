@@ -120,114 +120,106 @@
       - section6.2.19
       - section6.2.20
 
-  - name: 9.2.6 Ensure root PATH Integrity (Scored)
-    command: /root/.ansible/9.2/cis-9.2.6.sh
+  - name: 6.2.6 Ensure root PATH Integrity (Scored)
+    command: /root/.ansible/6.2/cis-6.2.6.sh
     tags:
       - scored
-      - section9.2
-      - section9.2.6
+      - section6.2
+      - section6.2.6
 
-  - name: 9.2.7 Check Permissions on User Home Directories (Scored)
-    command: /root/.ansible/9.2/cis-9.2.7.sh
+  - name: 6.2.7 Check That Users Are Assigned Valid Home Directories (Scored)
+    command: /root/.ansible/6.2/cis-6.2.7.sh
     tags:
       - scored
-      - section9.2
-      - section9.2.7
+      - section6.2
+      - section6.2.7
  
-  - name: 9.2.8 Check User Dot File Permissions (Scored)
-    command: /root/.ansible/9.2/cis-9.2.8.sh
+  - name: 6.2.8 Check Permissions on User Home Directories (Scored)
+    command: /root/.ansible/6.2/cis-6.2.8.sh
     tags:
       - scored
-      - section9.2
-      - section9.2.8
+      - section6.2
+      - section6.2.8
 
-  - name: 9.2.9 Check Permissions on User .netrc Files (Scored)
-    command: /root/.ansible/9.2/cis-9.2.9.sh
+  - name: 6.2.9 Check User Home Directory Ownership (Scored)
+    command: /root/.ansible/6.2/cis-6.2.9.sh
     tags:
       - scored
-      - section9.2
-      - section9.2.9
+      - section6.2
+      - section6.2.9
 
-  - name: 9.2.10 Check for Presence of User .rhosts Files (Scored)
-    command: /root/.ansible/9.2/cis-9.2.10.sh
+  - name: 6.2.10 Check User Dot File Permissions (Scored)
+    command: /root/.ansible/6.2/cis-6.2.10.sh
     tags:
       - scored
-      - section9.2
-      - section9.2.10
+      - section6.2
+      - section6.2.10
 
-  - name: 9.2.11 Check Groups in /etc/passwd (Scored)
-    command: /root/.ansible/9.2/cis-9.2.11.sh
+  - name: 6.2.11 Check for Presence of User .forward Files (Scored)
+    command: /root/.ansible/6.2/cis-6.2.11.sh
     tags:
       - scored
-      - section9.2
-      - section9.2.11
+      - section6.2
+      - section6.2.11
 
-  - name: 9.2.12 Check That Users Are Assigned Valid Home Directories (Scored)
-    command: /root/.ansible/9.2/cis-9.2.12.sh
+  - name: 6.2.12 Check for Presence of User .netrc Files (Scored)
+    command: /root/.ansible/6.2/cis-6.2.12.sh
     tags:
       - scored
-      - section9.2
-      - section9.2.12
+      - section6.2
+      - section6.2.12
 
-  - name: 9.2.13 Check User Home Directory Ownership (Scored)
-    command: /root/.ansible/9.2/cis-9.2.13.sh
+  - name: 6.2.13 Check Permissions on User .netrc Files (Scored)
+    command: /root/.ansible/6.2/cis-6.2.13.sh
     tags:
       - scored
-      - section9.2
-      - section9.2.13
+      - section6.2
+      - section6.2.13
 
-  - name: 9.2.14 Check for Duplicate UIDs (Scored)
-    command: /root/.ansible/9.2/cis-9.2.14.sh
+  - name: 6.2.14 Check for Presence of User .rhosts Files (Scored)
+    command: /root/.ansible/6.2/cis-6.2.14.sh
     tags:
       - scored
-      - section9.2
-      - section9.2.14
+      - section6.2
+      - section6.2.14
 
-  - name: 9.2.15 Check for Duplicate GIDs (Scored)
-    command: /root/.ansible/9.2/cis-9.2.15.sh
+  - name: 6.2.15 Check Groups in /etc/passwd (Scored)
+    command: /root/.ansible/6.2/cis-6.2.15.sh
     tags:
       - scored
       - check-only
-      - section9.2
-      - section9.2.15
+      - section6.2
+      - section6.2.15
 
-  - name: 9.2.16 Check for Duplicate User Names (Scored)
-    command: /root/.ansible/9.2/cis-9.2.16.sh
+  - name: 6.2.16 Check for Duplicate UIDs (Scored)
+    command: /root/.ansible/6.2/cis-6.2.16.sh
     tags:
       - scored
       - check-only
-      - section9.2
-      - section9.2.16
+      - section6.2
+      - section6.2.16
 
-  - name: 9.2.17 Check for Duplicate Group Names (Scored)
-    command: /root/.ansible/9.2/cis-9.2.17.sh
+  - name: 6.2.17 Check for Duplicate GIDs (Scored)
+    command: /root/.ansible/6.2/cis-6.2.17.sh
     tags:
       - scored
       - check-only
-      - section9.2
-      - section9.2.17
+      - section6.2
+      - section6.2.17
 
-  - name: 9.2.18 Check for Presence of User .netrc Files (Scored)
-    command: /root/.ansible/9.2/cis-9.2.18.sh
+  - name: 6.2.18 Check for Duplicate User Names (Scored)
+    command: /root/.ansible/6.2/cis-6.2.18.sh
     tags:
       - scored
       - check-only
-      - section9.2
-      - section9.2.18
+      - section6.2
+      - section6.2.18
 
-  - name: 9.2.19 Check for Presence of User .forward Files (Scored)
-    command: /root/.ansible/9.2/cis-9.2.19.sh
+  - name: 6.2.19 Check for Duplicate Group Names (Scored)
+    command: /root/.ansible/6.2/cis-6.2.19.sh
     tags:
       - scored
       - check-only
-      - section9.2
-      - section9.2.19
-
-  - name: 9.2.20 Check for Presence of User .forward Files (Scored)
-    command: /root/.ansible/9.2/cis-9.2.20.sh
-    tags:
-      - scored
-      - check-only
-      - section9.2
-      - section9.2.20
+      - section6.2
+      - section6.2.19
 

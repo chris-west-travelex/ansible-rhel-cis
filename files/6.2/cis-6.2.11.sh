@@ -1,9 +1,9 @@
 #!/bin/bash
 RET=0
-for i in $(cut -s -d: -f4 /etc/passwd | sort -u ); do
-  grep -q -P "^.*?:x:$i:" /etc/group
-  if [ $? -ne 0 ]; then
-    echo "Group $i is referenced by /etc/passwd but does not exist in /etc/group"
+for dir in `/bin/cat /etc/passwd |\
+  /bin/awk -F: '{ print $6 }'`; do
+  if [ ! -h "$dir/.forward" -a -f "$dir/.forward" ]; then
+    echo ".forward file $dir/.forward exists"
     RET=1
   fi
 done

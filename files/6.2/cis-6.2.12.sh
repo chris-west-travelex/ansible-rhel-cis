@@ -1,8 +1,9 @@
 #!/bin/bash
 RET=0
-cat /etc/passwd | awk -F: '{ print $1 " " $3 " " $6 }' | while read user uid dir; do
-  if [ $uid -ge 1000 -a ! -d "$dir" -a $user != "nfsnobody" ]; then
-    echo "The home directory ($dir) of user $user does not exist."
+for dir in `/bin/cat /etc/passwd |\
+  /bin/awk -F: '{ print $6 }'`; do
+  if [ ! -h "$dir/.netrc" -a -f "$dir/.netrc" ]; then
+    echo ".netrc file $dir/.netrc exists"
     RET=1
   fi
 done
