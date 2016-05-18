@@ -1,18 +1,233 @@
 ---
-#
-# Copyright 2014 Major Hayden
-#
-#   Licensed under the Apache License, Version 2.0 (the "License");
-#   you may not use this file except in compliance with the License.
-#   You may obtain a copy of the License at
-#
-#       http://www.apache.org/licenses/LICENSE-2.0
-#
-#   Unless required by applicable law or agreed to in writing, software
-#   distributed under the License is distributed on an "AS IS" BASIS,
-#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#   See the License for the specific language governing permissions and
-#   limitations under the License.
-#
+  - name: 6.2.1 Ensure Password Fields are Not Empty (Scored)
+    shell: /bin/cat /etc/shadow | /bin/awk -F':' '($2 == "" ) { print $1 " does not have a password "}'
+    register: result6_2_1
+    changed_when: "result6_2_1.stdout"
+    always_run: yes
+    tags:
+      - scored
+      - section6.2
+      - section6.2.1
 
-# CIS Section 6 has no Level 2 checks
+  - name: 6.2.2 Verify No Legacy "+" Entries Exist in /etc/passwd File (Scored)
+    shell: /bin/grep '^+:' /etc/passwd
+    register: result6_2_2
+    failed_when: result6_2_2.rc == 0
+    changed_when: result6_2_2.rc == 0
+    always_run: yes
+    ignore_errors: yes
+    tags:
+      - scored
+      - section6.2
+      - section6.2.2
+
+  - name: 6.2.3 Verify No Legacy "+" Entries Exist in /etc/shadow File (Scored)
+    shell: /bin/grep '^+:' /etc/shadow
+    register: result6_2_3
+    failed_when: result6_2_3.rc == 0
+    changed_when: result6_2_3.rc == 0
+    always_run: yes
+    ignore_errors: yes
+    tags:
+      - scored
+      - section6.2
+      - section6.2.3
+
+  - name: 6.2.4 Verify No Legacy "+" Entries Exist in /etc/group File (Scored)
+    shell: /bin/grep '^+:' /etc/group
+    register: result6_2_4
+    failed_when: result6_2_4.rc == 0
+    changed_when: result6_2_4.rc == 0
+    always_run: yes
+    ignore_errors: yes
+    tags:
+      - scored
+      - section6.2
+      - section6.2.4
+
+  - name: 6.2.5 Verify No UID 0 Accounts Exist Other Than root (Scored)
+    shell: /bin/awk -F':' '($3 == 0) { print $1 }' /etc/passwd | grep -qx 'root'
+    register: result6_2_5
+    failed_when: result6_2_5.rc != 0
+    changed_when: result6_2_5.rc != 0
+    always_run: yes
+    ignore_errors: yes
+    tags:
+      - scored
+      - section6.2
+      - section6.2.5
+
+  - name: 6.2.6-6.2.20 Prep
+    file: >
+      path=/root/.ansible/6.2
+      state=directory
+    tags:
+      - section6.2
+      - section6.2.6
+      - section6.2.7
+      - section6.2.8
+      - section6.2.9
+      - section6.2.10
+      - section6.2.11
+      - section6.2.12
+      - section6.2.13
+      - section6.2.14
+      - section6.2.15
+      - section6.2.16
+      - section6.2.17
+      - section6.2.18
+      - section6.2.19
+      - section6.2.20
+
+  - name: 6.2.6-6.2.20 Prep
+    copy: >
+      src="6.2/cis-{{item}}.sh"
+      dest="/root/.ansible/6.2/cis-{{item}}.sh"
+      mode=0700
+      owner=root
+      group=root
+    with_items:
+      - 6.2.6
+      - 6.2.7
+      - 6.2.8
+      - 6.2.9
+      - 6.2.10
+      - 6.2.11
+      - 6.2.12
+      - 6.2.13
+      - 6.2.14
+      - 6.2.15
+      - 6.2.16
+      - 6.2.17
+      - 6.2.18
+      - 6.2.19
+      - 6.2.20
+    tags:
+      - section6.2
+      - section6.2.6
+      - section6.2.7
+      - section6.2.8
+      - section6.2.9
+      - section6.2.10
+      - section6.2.11
+      - section6.2.12
+      - section6.2.13
+      - section6.2.14
+      - section6.2.15
+      - section6.2.16
+      - section6.2.17
+      - section6.2.18
+      - section6.2.19
+      - section6.2.20
+
+  - name: 9.2.6 Ensure root PATH Integrity (Scored)
+    command: /root/.ansible/9.2/cis-9.2.6.sh
+    tags:
+      - scored
+      - section9.2
+      - section9.2.6
+
+  - name: 9.2.7 Check Permissions on User Home Directories (Scored)
+    command: /root/.ansible/9.2/cis-9.2.7.sh
+    tags:
+      - scored
+      - section9.2
+      - section9.2.7
+ 
+  - name: 9.2.8 Check User Dot File Permissions (Scored)
+    command: /root/.ansible/9.2/cis-9.2.8.sh
+    tags:
+      - scored
+      - section9.2
+      - section9.2.8
+
+  - name: 9.2.9 Check Permissions on User .netrc Files (Scored)
+    command: /root/.ansible/9.2/cis-9.2.9.sh
+    tags:
+      - scored
+      - section9.2
+      - section9.2.9
+
+  - name: 9.2.10 Check for Presence of User .rhosts Files (Scored)
+    command: /root/.ansible/9.2/cis-9.2.10.sh
+    tags:
+      - scored
+      - section9.2
+      - section9.2.10
+
+  - name: 9.2.11 Check Groups in /etc/passwd (Scored)
+    command: /root/.ansible/9.2/cis-9.2.11.sh
+    tags:
+      - scored
+      - section9.2
+      - section9.2.11
+
+  - name: 9.2.12 Check That Users Are Assigned Valid Home Directories (Scored)
+    command: /root/.ansible/9.2/cis-9.2.12.sh
+    tags:
+      - scored
+      - section9.2
+      - section9.2.12
+
+  - name: 9.2.13 Check User Home Directory Ownership (Scored)
+    command: /root/.ansible/9.2/cis-9.2.13.sh
+    tags:
+      - scored
+      - section9.2
+      - section9.2.13
+
+  - name: 9.2.14 Check for Duplicate UIDs (Scored)
+    command: /root/.ansible/9.2/cis-9.2.14.sh
+    tags:
+      - scored
+      - section9.2
+      - section9.2.14
+
+  - name: 9.2.15 Check for Duplicate GIDs (Scored)
+    command: /root/.ansible/9.2/cis-9.2.15.sh
+    tags:
+      - scored
+      - check-only
+      - section9.2
+      - section9.2.15
+
+  - name: 9.2.16 Check for Duplicate User Names (Scored)
+    command: /root/.ansible/9.2/cis-9.2.16.sh
+    tags:
+      - scored
+      - check-only
+      - section9.2
+      - section9.2.16
+
+  - name: 9.2.17 Check for Duplicate Group Names (Scored)
+    command: /root/.ansible/9.2/cis-9.2.17.sh
+    tags:
+      - scored
+      - check-only
+      - section9.2
+      - section9.2.17
+
+  - name: 9.2.18 Check for Presence of User .netrc Files (Scored)
+    command: /root/.ansible/9.2/cis-9.2.18.sh
+    tags:
+      - scored
+      - check-only
+      - section9.2
+      - section9.2.18
+
+  - name: 9.2.19 Check for Presence of User .forward Files (Scored)
+    command: /root/.ansible/9.2/cis-9.2.19.sh
+    tags:
+      - scored
+      - check-only
+      - section9.2
+      - section9.2.19
+
+  - name: 9.2.20 Check for Presence of User .forward Files (Scored)
+    command: /root/.ansible/9.2/cis-9.2.20.sh
+    tags:
+      - scored
+      - check-only
+      - section9.2
+      - section9.2.20
+
