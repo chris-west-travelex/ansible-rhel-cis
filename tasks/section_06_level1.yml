@@ -77,7 +77,7 @@
       - section6.1
       - section6.1.6
 
-   - name: 6.1.7 Verify Permissions on /etc/shadow- (Scored)
+  - name: 6.1.7 Verify Permissions on /etc/shadow- (Scored)
     file: >
       path=/etc/shadow
       mode=0000

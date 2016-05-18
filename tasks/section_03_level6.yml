@@ -1,6 +1,6 @@
 ---
   - name: TODO
-    debug: msg="TODO: host firewall configuration"
+    debug: msg="TODO host firewall configuration"
 
   - name: 3.6 Enable IPtables (Scored)
     service: >
