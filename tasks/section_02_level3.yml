@@ -1,12 +1,12 @@
 ---
 - name: 2.3.1 Remove NIS Client (Scored)
-    yum: >
-      name=ypbind
-      state=absent
-    tags:
-      - scored
-      - section2.3
-      - section2.3.1
+  yum: >
+    name=ypbind
+    state=absent
+  tags:
+    - scored
+    - section2.3
+    - section2.3.1
 
 - name: 2.3.2 Remove rsh (Scored)
   yum: >
@@ -44,5 +44,3 @@
     - notscored
     - section2.3
     - section2.3.5
-
-
