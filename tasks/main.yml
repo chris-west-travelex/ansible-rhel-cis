@@ -47,18 +47,3 @@
   include: section_06.yml
   when: (ansible_os_family == "RedHat" or ansible_os_family == "Centos")
   tags: section6
-
-- name: Run Section 07
-  include: section_07.yml
-  when: (ansible_os_family == "RedHat" or ansible_os_family == "Centos")
-  tags: section7
-
-- name: Run Section 08
-  include: section_08.yml
-  when: (ansible_os_family == "RedHat" or ansible_os_family == "Centos")
-  tags: section8
-
-- name: Run Section 09
-  include: section_09.yml
-  when: (ansible_os_family == "RedHat" or ansible_os_family == "Centos")
-  tags: section9

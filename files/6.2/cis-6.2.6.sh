@@ -38,6 +38,8 @@ while [ "$1" != "" ]; do
       echo $1 is not owned by root
       RET=1
     fi
+  elif [ ! -e $1 ]; then
+    echo warning $1 is missing
   else
     echo $1 is not a directory
     RET=1

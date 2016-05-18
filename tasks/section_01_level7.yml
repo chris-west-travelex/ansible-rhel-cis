@@ -53,6 +53,7 @@
       - stats.results
     when: item.islnk is defined
     tags:
+      - notscored
       - section1.7
       - section1.7.1
       - section1.7.1.2
@@ -66,6 +67,7 @@
       - stats.results
     when: item.islnk is defined
     tags:
+      - notscored
       - section1.7
       - section1.7.1
       - section1.7.1.3
