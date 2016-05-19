@@ -89,7 +89,8 @@
     - section1.6.1.5
 
 - name: 1.6.1.6 Check for unconfined daemons (Scored)
-  shell: ps -eZ | egrep "initrc" | egrep -vw "tr|ps|egrep|bash|awk|{{tolerate_unconfined_daemons_regex}}" | tr ':' ' ' | awk '{print $NF }' | wc -l | grep 0 && touch /tmp/.cis-1.6.1.6
+  # NB. using subshell in case set -o pipefail
+  shell: "echo $(ps -eZ | egrep \"initrc\" | egrep -vw \"tr|ps|egrep|bash|awk|{{tolerate_unconfined_daemons_regex}}\" | tr ':' ' ' | awk '{print $NF }' | wc -l) | grep 0 && touch /tmp/.cis-1.6.1.6 || echo $(ps -eZ | egrep initrc)"
   args:
     creates: "/tmp/.cis-1.6.1.6"
   tags:
