@@ -1,3 +1,4 @@
+# https://bugzilla.redhat.com/show_bug.cgi?id=1026648
   - name: Reload auditd Rules
     shell: service auditd restart
 
